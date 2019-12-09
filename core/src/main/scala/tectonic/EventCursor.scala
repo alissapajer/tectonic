@@ -203,13 +203,6 @@ final class EventCursor private (
     back
   }
 
-  def reset(): Unit = {
-    tagCursor = tagCursorBatchStart
-    tagSubShiftCursor = tagSubShiftCursorBatchStart
-    strsCursor = strsCursorBatchStart
-    intsCursor = intsCursorBatchStart
-  }
-
   def copy(): EventCursor = {
     new EventCursor(
       tagBuffer = tagBuffer,

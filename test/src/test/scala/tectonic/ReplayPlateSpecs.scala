@@ -119,24 +119,6 @@ object ReplayPlateSpecs extends Specification with ScalaCheck {
       plate2.finishBatch(true) mustEqual List(Event.Num("42", -1, -1))
     }
 
-    "reset to the start of the batch" in {
-      val plate = ReplayPlate[IO](52428800, true).unsafeRunSync()
-      plate.str("hi")
-      plate.appendBatchBoundary()
-      plate.num("42", -1, -1)
-
-      val Some(cursor) = plate.finishBatch(true)
-
-      val plate1 = ReifiedTerminalPlate[IO](false).unsafeRunSync()
-      cursor.drive(plate1)
-      cursor.establishBatch() must beTrue
-      cursor.drive(plate1)
-      cursor.reset()
-      cursor.drive(plate1)
-
-      plate1.finishBatch(true) mustEqual List(Event.Str("hi"), Event.Num("42", -1, -1), Event.Num("42", -1, -1))
-    }
-
     "realign marks to the start of the batch" in {
       val plate = ReplayPlate[IO](52428800, true).unsafeRunSync()
       plate.str("hi")
@@ -346,8 +328,6 @@ object ReplayPlateSpecs extends Specification with ScalaCheck {
     while (ec.nextRow(NullPlate) == EventCursor.NextRowStatus.NextRow) {
       count += 1
     }
-
-    ec.reset()
 
     count
   }
